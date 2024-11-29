@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./UpdateEmployee.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const UpdateEmployee = ({ employeeData, onUpdateEmployee, onCancel }) => {
   const [updatedEmployee, setUpdatedEmployee] = useState({
@@ -51,15 +52,17 @@ const UpdateEmployee = ({ employeeData, onUpdateEmployee, onCancel }) => {
     console.log("Updating employee with ID:", id); 
     try {
       const response = await axios.put(
-        `http://localhost:9000/api/updateEmployee/${id}`,
+        `http://localhost:8000/api/updateEmployee/${id}`,
         {
           ...updatedEmployee,
         }
       );
       onUpdateEmployee(response.data); 
+      toast.success("Employee updated successfully!");
       console.log("Employee updated response:", response.data);
     } catch (error) {
       console.error("Error updating Employee:", error);
+      toast.error("Failed to update employee. Please try again.");
     }
   };
 
@@ -70,6 +73,8 @@ const UpdateEmployee = ({ employeeData, onUpdateEmployee, onCancel }) => {
     if (Object.keys(validationErrors).length === 0) {
       console.log(id)
       updateEmployee(id); 
+    } else {
+      toast.error("Please fix the validation errors.");
     }
   };
 

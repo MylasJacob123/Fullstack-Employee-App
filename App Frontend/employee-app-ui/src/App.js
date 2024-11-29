@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EmployeeRegisterForm from "./components/EmployeeRegisterForm";
 import EmployeeRegister from "./components/EmployeeRegister";
 import SearchEmployee from "./components/SearchEmployee";
@@ -8,6 +8,9 @@ import axios from "axios";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ResetPassword from "./components/ResetPassword";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   const [view, setView] = useState("Registration Form");
@@ -16,6 +19,15 @@ function App() {
   const [employeeToEdit, setEmployeeToEdit] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authView, setAuthView] = useState("SignIn");
+
+  useEffect(() => {
+    const savedLoginState = localStorage.getItem("isLoggedIn");
+    if (savedLoginState === "true") {
+      setIsLoggedIn(true);
+      setAuthView(null);
+      setView("Registration Form");
+    }
+  }, []);
 
   const addEmployee = (employeeData) => {
     setEmployees((prevEmployees) => {
@@ -31,16 +43,16 @@ function App() {
     );
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:9000/api/deleteEmployee/${id}`);
+        await axios.delete(`http://localhost:8000/api/deleteEmployee/${id}`);
         setEmployees((prevEmployees) => {
           const updatedEmployees = prevEmployees.filter((_, i) => i !== index);
           setFilteredEmployees(updatedEmployees);
           return updatedEmployees;
         });
-        alert("Employee successfully deleted");
+        toast.success("Employee successfully deleted!");
       } catch (error) {
         console.error("Error in deleting employee:", error.message);
-        alert("Failed to delete the employee.");
+        toast.error("Failed to delete the employee.");
       }
     }
   };
@@ -74,12 +86,15 @@ function App() {
   const handleSignIn = () => {
     setIsLoggedIn(true);
     setAuthView(null);
+    localStorage.setItem("isLoggedIn", true);
     setView("Registration Form");
   };
 
   const handleSignOut = () => {
     setIsLoggedIn(false);
     setView("SignIn");
+    localStorage.removeItem("isLoggedIn");
+    toast.success("You have successfully logged out!");
   };
 
   const renderAuthView = () => {
@@ -98,7 +113,7 @@ function App() {
   return (
     <div className="App">
       <h1>Employee Registration App</h1>
-
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="App-container">
         <aside className="sidebar">
           {isLoggedIn && (

@@ -4,19 +4,23 @@ import "./EmployeeRegister.css";
 
 const EmployeeRegister = ({ onDeleteEmployee, onEditEmployee }) => {
   const [employees, setEmployees] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchEmployees();
   }, []);
 
   const fetchEmployees = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:9000/api/getEmployees"
+        "http://localhost:8000/api/getEmployees"
       );
       setEmployees(response.data.data);
     } catch (error) {
       console.error("Error fetching employees:", error.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
   console.log(employees);
@@ -24,7 +28,9 @@ const EmployeeRegister = ({ onDeleteEmployee, onEditEmployee }) => {
   return (
     <div className="employee-register-container">
       <h2>Registered Employees</h2>
-      {employees.length === 0 ? (
+      {isLoading ? ( 
+        <p>Loading employees...</p>
+      ) : employees.length === 0 ? ( 
         <p>No employees registered yet.</p>
       ) : (
         <table className="employee-table">
@@ -57,7 +63,7 @@ const EmployeeRegister = ({ onDeleteEmployee, onEditEmployee }) => {
                 <td className="action-btn-container">
                   <button
                     className="update-btn"
-                    onClick={() => onEditEmployee(employee.id, index)}
+                    onClick={() => onEditEmployee(employee, index)}
                   >
                     Edit
                   </button>

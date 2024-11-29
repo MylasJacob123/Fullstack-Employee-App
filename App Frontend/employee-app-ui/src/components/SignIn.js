@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./SignIn.css"; 
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function SignIn({ onSignIn }) {
   const [credentials, setCredentials] = useState({
@@ -21,19 +22,16 @@ function SignIn({ onSignIn }) {
 
   const signIn = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:9000/auth/login",
-        {
-          email: credentials.email, 
-          password: credentials.password,
-        }
-      );
-      setSuccess("Login successful!");
+      const response = await axios.post("http://localhost:8000/auth/login", {
+        email: credentials.email,
+        password: credentials.password,
+      });
+      toast.success("Login successful! 🎉");
       console.log(response);
-      onSignIn();  
+      onSignIn();
     } catch (error) {
       console.error("Error in logging in", error);
-      setError("Failed login. Please try again.");
+      toast.error("Failed login. Please try again.");
     }
   };
 

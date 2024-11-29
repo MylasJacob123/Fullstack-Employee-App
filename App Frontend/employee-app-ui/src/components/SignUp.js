@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./SignUp.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function SignUp({ onSignIn }) {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ function SignUp({ onSignIn }) {
   const createAccount = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:9000/auth/createAccount",
+        "http://localhost:8000/auth/createAccount",
         {
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -32,12 +33,12 @@ function SignUp({ onSignIn }) {
           password: formData.password,
         }
       );
-      setSuccess("Account created successfully!");
+      toast.success("Account created successfully! 🎉");
       console.log(response);
       onSignIn();  
     } catch (error) {
       console.error("Error creating account", error);
-      setError("Failed to create account. Please try again.");
+      toast.error("Failed to create account. Please try again.");
     }
   };
 

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./ResetPassword.css";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
   const [email, setEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -13,20 +12,17 @@ function ResetPassword() {
   const handleResetPassword = async (e) => {
     e.preventDefault();
     if (!isValidEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
-      setSuccessMessage("");
+      toast.error("Please enter a valid email address.");
       return;
     }
     
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:9000/auth/reset-password", { email });
-      setSuccessMessage(response.data.message);
-      setErrorMessage("");
+      const response = await axios.post("http://localhost:8000/auth/reset-password", { email });
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error sending reset email:", error.message);
-      setErrorMessage("Failed to send reset email. Please try again.");
-      setSuccessMessage("");
+      toast.error("Failed to send reset email. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -35,8 +31,6 @@ function ResetPassword() {
   return (
     <div className="reset-password-container">
       <h2 className="reset-password-h2">Reset Password</h2>
-      {successMessage && <p className="reset-password-success-message">{successMessage}</p>}
-      {errorMessage && <p className="reset-password-error-message">{errorMessage}</p>}
       <form className="reset-password-form" onSubmit={handleResetPassword}>
         <input
           type="email"

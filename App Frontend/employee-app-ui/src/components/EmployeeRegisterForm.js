@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./EmployeeRegisterForm.css";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -45,8 +47,9 @@ const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
   };
 
   const addEmployee = async () => {
+    setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:9000/api/addEmployee", {
+      const response = await axios.post("http://localhost:8000/api/addEmployee", {
         name: formData.name,
         surname: formData.surname,
         age: formData.age,
@@ -54,9 +57,13 @@ const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
         role: formData.role
       });
       onAddEmployee(response.data); 
+      toast.success("Employee registered successfully!");
       console.log(response);
     } catch (error) {
       console.error("Error creating Employee", error);
+      toast.error("Error creating employee.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,6 +82,8 @@ const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
         role: "",
       });
       setErrors({});
+    } else {
+      toast.error("Please fix the form errors.");
     }
   };
 
@@ -150,8 +159,8 @@ const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
             />
             {errors.role && <span className="error">{errors.role}</span>}
           </div>
-          <button type="button" className="submit-btn" onClick={handleClick}>
-            Register
+          <button type="button" className="submit-btn" onClick={handleClick} disabled={isLoading}>
+            {isLoading ? "Adding..." : "Register"}
           </button>
         </form>
       </div>

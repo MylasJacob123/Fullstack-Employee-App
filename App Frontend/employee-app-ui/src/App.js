@@ -43,7 +43,7 @@ function App() {
     );
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/deleteEmployee/${id}`);
+        await axios.delete(`https://employee-app-fullstack-appbackend.onrender.com/api/deleteEmployee/${id}`);
         setEmployees((prevEmployees) => {
           const updatedEmployees = prevEmployees.filter((_, i) => i !== index);
           setFilteredEmployees(updatedEmployees);

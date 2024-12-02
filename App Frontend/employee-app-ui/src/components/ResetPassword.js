@@ -18,7 +18,7 @@ function ResetPassword() {
     
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/auth/reset-password", { email });
+      const response = await axios.post("https://employee-app-fullstack-appbackend.onrender.com/auth/reset-password", { email });
       toast.success(response.data.message);
     } catch (error) {
       console.error("Error sending reset email:", error.message);

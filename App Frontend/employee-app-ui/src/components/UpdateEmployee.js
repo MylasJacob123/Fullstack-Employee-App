@@ -52,7 +52,7 @@ const UpdateEmployee = ({ employeeData, onUpdateEmployee, onCancel }) => {
     console.log("Updating employee with ID:", id); 
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/updateEmployee/${id}`,
+        `hhttps://employee-app-fullstack-appbackend.onrender.com/api/updateEmployee/${id}`,
         {
           ...updatedEmployee,
         }

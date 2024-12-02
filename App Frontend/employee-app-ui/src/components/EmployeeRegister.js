@@ -14,7 +14,7 @@ const EmployeeRegister = ({ onDeleteEmployee, onEditEmployee }) => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/getEmployees"
+        "https://employee-app-fullstack-appbackend.onrender.com/api/getEmployees"
       );
       setEmployees(response.data.data);
     } catch (error) {

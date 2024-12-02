@@ -49,7 +49,7 @@ const EmployeeRegisterForm = ({ onAddEmployee, editEmployee }) => {
   const addEmployee = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/api/addEmployee", {
+      const response = await axios.post("https://employee-app-fullstack-appbackend.onrender.com/api/addEmployee", {
         name: formData.name,
         surname: formData.surname,
         age: formData.age,
